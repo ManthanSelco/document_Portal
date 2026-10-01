@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Value Chain Documents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --border: #e2e5ee;
+    --text: #141a2b;
+    --muted: #64708a;
+    --primary: #5b3df5;
+    --primary-dark: #4a2fd6;
+    --navy: #1a1d4e;
+    --danger: #d93a3a;
+    --success: #1f8f4e;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+  button, input, select, textarea { font: inherit; }
+
+  /* Header */
+  .topbar { background: var(--navy); color: #fff; }
+  .topbar-inner { max-width: 1200px; margin: 0 auto; padding: 22px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .topbar h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .topbar p { margin: 4px 0 0; color: #b9bce6; font-size: 13.5px; }
+  .topbar .spacer { flex: 1; }
+
+  .btn { border: 0; border-radius: 10px; padding: 11px 18px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+  .btn-ghost { background: #fff; color: var(--text); border: 1px solid var(--border); }
+  .btn-ghost:hover { background: #f0f2f7; }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 22px 20px 60px; }
+
+  /* Sector tabs */
+  .tabs { display: flex; gap: 6px; overflow-x: auto; border-bottom: 1px solid var(--border); scrollbar-width: thin; }
+  .tab { background: none; border: 0; padding: 12px 14px; cursor: pointer; color: var(--muted); font-weight: 600; white-space: nowrap; border-bottom: 3px solid transparent; display: inline-flex; align-items: center; gap: 8px; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); border-bottom-color: var(--tab-color, var(--primary)); }
+  .tab .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--tab-color, var(--primary)); }
+  .tab .count { background: #eceef5; color: var(--muted); border-radius: 999px; padding: 1px 8px; font-size: 12px; }
+  .tab.active .count { background: var(--tab-color, var(--primary)); color: #fff; }
+
+  .toolbar { display: flex; gap: 12px; align-items: center; margin: 16px 0 10px; flex-wrap: wrap; }
+  .search { flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .chip { border: 1px solid var(--border); background: #fff; border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--text); }
+  .chip.active { background: var(--chip-color, var(--primary)); color: #fff; border-color: transparent; }
+  .chip small { opacity: .7; margin-left: 4px; }
+
+  /* Cards */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 10px; border-top: 4px solid var(--card-color, var(--primary)); }
+  .card h3 { margin: 0; font-size: 16px; line-height: 1.35; word-break: break-word; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge { font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 6px; background: #eef0f6; color: #3a4360; }
+  .badge.sector { background: var(--card-color); color: #fff; }
+  .badge.type { background: #efeafe; color: #4a2fd6; }
+  .desc { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
+  .files { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 6px; }
+  .files a { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13.5px; }
+  .files a:hover { background: #f6f7fb; }
+  .ext { flex: none; width: 42px; text-align: center; font-size: 10.5px; font-weight: 700; padding: 4px 0; border-radius: 5px; color: #fff; background: #6b7280; }
+  .ext.pdf { background: #d93a3a; } .ext.doc { background: #2b5bd7; } .ext.ppt { background: #d9622b; }
+  .ext.xls { background: #1f8f4e; } .ext.img { background: #8b3fd6; } .ext.vid { background: #b8327a; }
+  .fname { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fsize { color: var(--muted); font-size: 12px; flex: none; }
+  .foot { color: var(--muted); font-size: 12.5px; margin-top: auto; padding-top: 4px; }
+
+  .state { text-align: center; color: var(--muted); padding: 60px 20px; background: #fff; border: 1px dashed var(--border); border-radius: var(--radius); }
+  .state strong { display: block; color: var(--text); font-size: 16px; margin-bottom: 6px; }
+
+  /* Modal (matches the existing "Add New Document" form) */
+  .overlay { position: fixed; inset: 0; background: rgba(15, 18, 45, .55); display: none; align-items: flex-start; justify-content: center; padding: 30px 16px; overflow-y: auto; z-index: 50; }
+  .overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 18px; width: 100%; max-width: 880px; padding: 28px 32px 30px; position: relative; }
+  .modal h2 { margin: 0 0 22px; font-size: 26px; font-weight: 700; }
+  .close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; border-radius: 10px; border: 0; background: #eef1f6; cursor: pointer; font-size: 20px; color: var(--text); }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 15px; }
+  .req { color: var(--danger); }
+  .input { width: 100%; padding: 13px 16px; border: 1px solid #d5dae5; border-radius: 10px; background: #fff; color: var(--text); }
+  .input:focus { outline: 2px solid #c9bffd; border-color: var(--primary); }
+  .input:disabled { background: #f3f5f9; color: #9aa3b6; }
+  textarea.input { min-height: 110px; resize: vertical; }
+  .row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .row2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .other { margin-top: 8px; display: none; }
+  .other.show { display: block; }
+  .hint { color: var(--muted); font-size: 13px; margin-top: 7px; }
+
+  .drop { border: 2px dashed #cfd5e3; border-radius: 12px; padding: 22px; text-align: center; color: var(--muted); cursor: pointer; transition: .15s; }
+  .drop:hover, .drop.drag { border-color: var(--primary); background: #f6f4ff; color: var(--text); }
+  .drop strong { color: var(--primary); }
+  .picked { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-direction: column; gap: 8px; }
+  .picked li { display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; position: relative; overflow: hidden; }
+  .picked .bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--primary); width: 0; transition: width .2s; }
+  .picked .bar.done { background: var(--success); }
+  .picked .bar.err { background: var(--danger); width: 100% !important; }
+  .rm { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 18px; padding: 0 4px; }
+  .rm:hover { color: var(--danger); }
+  .actions { display: flex; gap: 12px; margin-top: 8px; }
+  .error-box { background: #fdeeee; color: #a02727; padding: 10px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 16px; display: none; }
+  .error-box.show { display: block; }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: #141a2b; color: #fff; padding: 12px 20px; border-radius: 10px; opacity: 0; transition: .25s; pointer-events: none; z-index: 100; font-size: 14px; }
+  .toast.show { opacity: 1; transform: translateX(-50%); }
+
+  @media (max-width: 760px) {
+    .row3, .row2 { grid-template-columns: 1fr; gap: 0; }
+    .row3 .field, .row2 .field { margin-bottom: 20px; }
+    .modal { padding: 22px 18px; }
+    .modal h2 { font-size: 22px; padding-right: 40px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div>
+      <h1>Value Chain Documents</h1>
+      <p>SELCO Foundation · Livelihood Innovation · document collection by sector and value chain</p>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn btn-primary" id="openForm">+ Add Document</button>
+  </div>
+</header>
+
+<main>
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+  <div class="toolbar">
+    <input class="search" id="search" type="search" placeholder="Search by document name, type, value chain or file name…" />
+    <button class="btn btn-ghost" id="refresh">↻ Refresh</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <section id="list"></section>
+</main>
+
+<!-- Add New Document -->
+<div class="overlay" id="formOverlay">
+  <form class="modal" id="docForm" novalidate>
+    <button type="button" class="close" data-close aria-label="Close">×</button>
+    <h2>Add New Document</h2>
+    <div class="error-box" id="formError"></div>
+
+    <div class="field">
+      <label for="docName">Document Name <span class="req">*</span></label>
+      <input class="input" id="docName" placeholder="e.g. Tea Value Chain — Field Assessment Report" required />
+    </div>
+
+    <div class="row3">
+      <div class="field">
+        <label for="sector">Sector <span class="req">*</span></label>
+        <select class="input" id="sector" required></select>
+        <input class="input other" id="sectorOther" placeholder="Type the sector name" />
+      </div>
+      <div class="field">
+        <label for="valueChain">Value Chain <span class="req">*</span></label>
+        <select class="input" id="valueChain" disabled required>
+          <option value="">Select a sector first</option>
+        </select>
+        <input class="input other" id="valueChainOther" placeholder="Type the value chain name" />
+      </div>
+      <div class="field">
+        <label for="docDate">Document Date</label>
+        <input class="input" id="docDate" type="date" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="docType">Document Type <span class="req">*</span></label>
+      <input class="input" id="docType" list="docTypes" placeholder="e.g. Case Study, Story, Document, Research, Deck, Report, Photos, Video…" required />
+      <datalist id="docTypes">
+        <option value="Case Study"></option>
+        <option value="Story"></option>
+        <option value="Document"></option>
+        <option value="Research"></option>
+        <option value="Deck"></option>
+        <option value="Report"></option>
+        <option value="Photos"></option>
+        <option value="Video"></option>
+        <option value="Data / Spreadsheet"></option>
+      </datalist>
+      <div class="hint">Type freely, or pick one of the suggestions.</div>
+    </div>
+
+    <div class="field">
+      <label for="desc">Description</label>
+      <textarea class="input" id="desc" placeholder="Briefly describe this document. If the file is on Google Drive, paste its link here and make sure we can open it (set sharing to 'Anyone with the link can view')."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Upload Document(s) <span class="req">*</span></label>
+      <div class="drop" id="drop" tabindex="0">
+        <strong>Choose files</strong> or drag and drop them here
+      </div>
+      <input type="file" id="fileInput" multiple hidden />
+      <ul class="picked" id="picked"></ul>
+      <div class="hint">Any file type is fine (PDF, Word, PPT, Excel, images, videos…). You can attach more than one file to a single document entry.</div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" id="submitBtn">Upload Document</button>
+      <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+    </div>
+  </form>
+</div>
+
+<!-- Passcode (only shown if PORTAL_PASSCODE is set on the server) -->
+<div class="overlay" id="passOverlay">
+  <form class="modal" id="passForm" style="max-width:420px">
+    <h2 style="font-size:20px">Enter portal passcode</h2>
+    <div class="field">
+      <input class="input" id="passInput" type="password" placeholder="Passcode" autocomplete="current-password" />
+    </div>
+    <div class="actions"><button class="btn btn-primary" type="submit">Continue</button></div>
+  </form>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Sectors and value chains (Workstream 1 — Proposed Value Chains) ---------- */
+const SECTORS = {
+  "Agriculture": ["Tea", "Oranges", "Rice/Paddy", "Jackfruit", "Turmeric", "Ginger", "Chilli", "Millet", "Pineapple",
+                  "Mushroom", "Lemon", "Honey", "IoT Irrigation", "Greenhouses", "Tamarind", "Soil Replenishment", "Seed Production"],
+  "Animal Husbandry": ["Fisheries", "Poultry", "Piggery", "Dairy"],
+  "Textiles & Crafts": ["Cane & Bamboo", "Natural Fibres", "Silk"],
+  "Micro Businesses": ["Eateries/Café", "Snack Making", "Retail & Service", "Light Manufacturing"],
+  "Urban & PWD": ["Energy Efficient Equipment", "Cooling Solutions", "Assistive Technologies", "Solution Modifications"],
+};
+const COLORS = {
+  "Agriculture": "#2e7d32",
+  "Animal Husbandry": "#43a047",
+  "Textiles & Crafts": "#7b1fa2",
+  "Micro Businesses": "#1565c0",
+  "Urban & PWD": "#ef7d10",
+  "Other": "#546e7a",
+};
+const OTHER = "__other__";
+
+/* ---------- State ---------- */
+let entries = [];
+let activeTab = "All";
+let activeVC = null;
+let query = "";
+let pickedFiles = [];
+let entryId = newId();
+let passcode = (() => { try { return sessionStorage.getItem("portalPasscode") || ""; } catch { return ""; } })();
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function newId() {
+  return (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 12));
+}
+function sectorGroup(sector) { return SECTORS[sector] ? sector : "Other"; }
+function colorOf(sector) { return COLORS[sectorGroup(sector)]; }
+function fmtSize(b) {
+  if (!b) return "";
+  const u = ["B", "KB", "MB", "GB"]; let i = 0;
+  while (b >= 1024 && i < u.length - 1) { b /= 1024; i++; }
+  return b.toFixed(i ? 1 : 0) + " " + u[i];
+}
+function fmtDate(d) {
+  if (!d) return "";
+  const [y, m, day] = d.split("-");
+  return day && m && y ? `${day}-${m}-${y}` : d;
+}
+function extInfo(name) {
+  const ext = (name.split(".").pop() || "").toLowerCase();
+  const map = { pdf: "pdf", doc: "doc", docx: "doc", odt: "doc", rtf: "doc", txt: "doc",
+    ppt: "ppt", pptx: "ppt", odp: "ppt", key: "ppt", xls: "xls", xlsx: "xls", csv: "xls", ods: "xls",
+    jpg: "img", jpeg: "img", png: "img", gif: "img", webp: "img", heic: "img", svg: "img",
+    mp4: "vid", mov: "vid", avi: "vid", mkv: "vid", webm: "vid" };
+  return { cls: map[ext] || "", label: (ext && ext.length <= 5 ? ext : "file").toUpperCase() };
+}
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 3200);
+}
+
+/* ---------- API ---------- */
+function askPasscode() {
+  return new Promise((resolve) => {
+    $("passOverlay").classList.add("open");
+    $("passInput").value = ""; $("passInput").focus();
+    $("passForm").onsubmit = (e) => {
+      e.preventDefault();
+      passcode = $("passInput").value.trim();
+      try { sessionStorage.setItem("portalPasscode", passcode); } catch {}
+      $("passOverlay").classList.remove("open");
+      resolve(passcode);
+    };
+  });
+}
+async function api(path, { method = "GET", body } = {}) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const headers = {};
+    if (passcode) headers["x-portal-passcode"] = passcode;
+    if (body) headers["Content-Type"] = "application/json";
+    const r = await fetch(path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    if (r.status === 401) { if (!(await askPasscode())) break; continue; }
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || `Request failed (${r.status})`);
+    return data;
+  }
+  throw new Error("Passcode required");
+}
+function putToS3(url, file, contentType, onProgress) {
+  return new Promise((resolve, reject) => {
+    const x = new XMLHttpRequest();
+    x.open("PUT", url);
+    x.setRequestHeader("Content-Type", contentType);
+    x.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
+    x.onload = () => (x.status >= 200 && x.status < 300 ? resolve() : reject(new Error(`S3 rejected the upload (${x.status})`)));
+    x.onerror = () => reject(new Error("Upload blocked — check the S3 bucket CORS settings"));
+    x.send(file);
+  });
+}
+
+/* ---------- Listing ---------- */
+async function load() {
+  $("list").innerHTML = `<div class="state">Loading documents…</div>`;
+  try {
+    const data = await api("/api/list");
+    entries = data.entries || [];
+    render();
+  } catch (e) {
+    $("list").innerHTML = `<div class="state"><strong>Couldn't load documents</strong>${esc(e.message)}</div>`;
+    renderTabs();
+  }
+}
+
+function inTab(e) { return activeTab === "All" || sectorGroup(e.sector) === activeTab; }
+function matchesQuery(e) {
+  if (!query) return true;
+  const hay = [e.name, e.sector, e.valueChain, e.documentType, e.description, ...(e.files || []).map((f) => f.name)].join(" ").toLowerCase();
+  return hay.includes(query);
+}
+
+function renderTabs() {
+  const tabs = ["All", ...Object.keys(SECTORS), "Other"];
+  $("tabs").innerHTML = tabs.map((t) => {
+    const n = t === "All" ? entries.length : entries.filter((e) => sectorGroup(e.sector) === t).length;
+    if (t === "Other" && !n) return "";
+    const color = t === "All" ? "var(--primary)" : COLORS[t];
+    return `<button class="tab ${t === activeTab ? "active" : ""}" role="tab" style="--tab-color:${color}" data-tab="${esc(t)}">
+      ${t === "All" ? "" : '<span class="dot"></span>'}${esc(t === "All" ? "All Documents" : t)}<span class="count">${n}</span></button>`;
+  }).join("");
+}
+
+function renderChips() {
+  if (activeTab === "All") { $("chips").innerHTML = ""; return; }
+  const counts = {};
+  entries.filter(inTab).forEach((e) => { counts[e.valueChain] = (counts[e.valueChain] || 0) + 1; });
+  const names = [...new Set([...(SECTORS[activeTab] || []), ...Object.keys(counts)])];
+  const color = COLORS[activeTab];
+  $("chips").innerHTML =
+    `<button class="chip ${!activeVC ? "active" : ""}" style="--chip-color:${color}" data-vc="">All value chains</button>` +
+    names.map((v) => `<button class="chip ${activeVC === v ? "active" : ""}" style="--chip-color:${color}" data-vc="${esc(v)}">${esc(v)}<small>${counts[v] || 0}</small></button>`).join("");
+}
+
+function renderList() {
+  const shown = entries.filter((e) => inTab(e) && (!activeVC || e.valueChain === activeVC) && matchesQuery(e));
+  if (!shown.length) {
+    $("list").innerHTML = `<div class="state"><strong>No documents here yet</strong>${entries.length ? "Try another tab, value chain or search." : "Click “+ Add Document” to upload the first one."}</div>`;
+    return;
+  }
+  $("list").innerHTML = `<div class="grid">${shown.map((e) => `
+    <article class="card" style="--card-color:${colorOf(e.sector)}">
+      <h3>${esc(e.name)}</h3>
+      <div class="meta">
+        <span class="badge sector">${esc(e.sector)}</span>
+        <span class="badge">${esc(e.valueChain)}</span>
+        <span class="badge type">${esc(e.documentType)}</span>
+      </div>
+      ${e.description ? `<p class="desc">${esc(e.description)}</p>` : ""}
+      <ul class="files">${(e.files || []).map((f) => {
+        const x = extInfo(f.name);
+        return `<li><a href="${esc(f.url)}" target="_blank" rel="noopener" title="${esc(f.name)}">
+          <span class="ext ${x.cls}">${esc(x.label)}</span><span class="fname">${esc(f.name)}</span><span class="fsize">${fmtSize(f.size)}</span></a></li>`;
+      }).join("")}</ul>
+      <div class="foot">${e.documentDate ? "Document date " + esc(fmtDate(e.documentDate)) + " · " : ""}Uploaded ${esc(new Date(e.uploadedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }))}</div>
+    </article>`).join("")}</div>`;
+}
+
+function render() { renderTabs(); renderChips(); renderList(); }
+
+$("tabs").addEventListener("click", (ev) => {
+  const b = ev.target.closest("[data-tab]"); if (!b) return;
+  activeTab = b.dataset.tab; activeVC = null; render();
+});
+$("chips").addEventListener("click", (ev) => {
+  const b = ev.target.closest("[data-vc]"); if (!b) return;
+  activeVC = b.dataset.vc || null; renderChips(); renderList();
+});
+$("search").addEventListener("input", (ev) => { query = ev.target.value.trim().toLowerCase(); renderList(); });
+$("refresh").addEventListener("click", load);
+
+/* ---------- Form ---------- */
+function fillSectors() {
+  $("sector").innerHTML = `<option value="">Select sector</option>` +
+    Object.keys(SECTORS).map((s) => `<option>${esc(s)}</option>`).join("") +
+    `<option value="${OTHER}">Other (type it)</option>`;
+}
+function fillValueChains() {
+  const s = $("sector").value;
+  $("sectorOther").classList.toggle("show", s === OTHER);
+  const vc = $("valueChain");
+  if (!s) {
+    vc.innerHTML = `<option value="">Select a sector first</option>`; vc.disabled = true;
+  } else {
+    const list = SECTORS[s] || [];
+    vc.innerHTML = `<option value="">Select value chain</option>` +
+      list.map((v) => `<option>${esc(v)}</option>`).join("") +
+      `<option value="${OTHER}">Other (type it)</option>`;
+    vc.disabled = false;
+    if (s === OTHER) vc.value = OTHER;
+  }
+  $("valueChainOther").classList.toggle("show", vc.value === OTHER);
+}
+$("sector").addEventListener("change", fillValueChains);
+$("valueChain").addEventListener("change", () => $("valueChainOther").classList.toggle("show", $("valueChain").value === OTHER));
+
+function openForm() {
+  $("formOverlay").classList.add("open");
+  // Pre-select the sector of the tab the person is looking at
+  if (SECTORS[activeTab] && !$("sector").value) { $("sector").value = activeTab; fillValueChains(); }
+  if (activeVC && $("sector").value === activeTab) { $("valueChain").value = activeVC; }
+  $("docName").focus();
+}
+function closeForm() { if (!uploading) $("formOverlay").classList.remove("open"); }
+function resetForm() {
+  $("docForm").reset(); fillSectors(); fillValueChains();
+  pickedFiles = []; renderPicked(); entryId = newId(); showError("");
+}
+$("openForm").addEventListener("click", openForm);
+document.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closeForm));
+$("formOverlay").addEventListener("mousedown", (e) => { if (e.target === $("formOverlay")) closeForm(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeForm(); });
+
+/* Files */
+function addFiles(list) {
+  for (const f of list) {
+    if (!pickedFiles.some((p) => p.name === f.name && p.size === f.size)) pickedFiles.push(f);
+  }
+  renderPicked();
+}
+function renderPicked() {
+  $("picked").innerHTML = pickedFiles.map((f, i) => {
+    const x = extInfo(f.name);
+    return `<li data-i="${i}"><span class="ext ${x.cls}">${esc(x.label)}</span><span class="fname">${esc(f.name)}</span>
+      <span class="fsize">${fmtSize(f.size)}</span><button type="button" class="rm" data-rm="${i}" aria-label="Remove">×</button><span class="bar"></span></li>`;
+  }).join("");
+}
+$("drop").addEventListener("click", () => $("fileInput").click());
+$("drop").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("fileInput").click(); } });
+$("fileInput").addEventListener("change", (e) => { addFiles(e.target.files); e.target.value = ""; });
+["dragenter", "dragover"].forEach((t) => $("drop").addEventListener(t, (e) => { e.preventDefault(); $("drop").classList.add("drag"); }));
+["dragleave", "drop"].forEach((t) => $("drop").addEventListener(t, (e) => { e.preventDefault(); $("drop").classList.remove("drag"); }));
+$("drop").addEventListener("drop", (e) => addFiles(e.dataTransfer.files));
+$("picked").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-rm]"); if (!b || uploading) return;
+  pickedFiles.splice(Number(b.dataset.rm), 1); renderPicked();
+});
+
+function showError(msg) { $("formError").textContent = msg; $("formError").classList.toggle("show", !!msg); }
+
+/* Submit */
+let uploading = false;
+$("docForm").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  if (uploading) return;
+  const sectorSel = $("sector").value;
+  const vcSel = $("valueChain").value;
+  const data = {
+    id: entryId,
+    name: $("docName").value.trim(),
+    sector: sectorSel === OTHER ? $("sectorOther").value.trim() : sectorSel,
+    valueChain: vcSel === OTHER ? $("valueChainOther").value.trim() : vcSel,
+    documentType: $("docType").value.trim(),
+    documentDate: $("docDate").value,
+    description: $("desc").value.trim(),
+  };
+  const missing = [];
+  if (!data.name) missing.push("Document Name");
+  if (!data.sector) missing.push("Sector");
+  if (!data.valueChain) missing.push("Value Chain");
+  if (!data.documentType) missing.push("Document Type");
+  if (!pickedFiles.length) missing.push("at least one file");
+  if (missing.length) return showError("Please fill in: " + missing.join(", ") + ".");
+  showError("");
+
+  // Make file names unique within this entry
+  const used = new Set();
+  const jobs = pickedFiles.map((file, i) => {
+    let name = file.name;
+    const dot = name.lastIndexOf(".");
+    const base = dot > 0 ? name.slice(0, dot) : name, ext = dot > 0 ? name.slice(dot) : "";
+    for (let n = 2; used.has(name.toLowerCase()); n++) name = `${base} (${n})${ext}`;
+    used.add(name.toLowerCase());
+    return { file, name, i };
+  });
+
+  uploading = true;
+  $("submitBtn").disabled = true;
+  $("submitBtn").textContent = "Uploading…";
+  renderPicked(); // reset progress bars (matters on retry)
+  const rows = [...$("picked").children];
+  const bar = (i) => rows[i]?.querySelector(".bar");
+
+  try {
+    const uploaded = [];
+    let next = 0;
+    const worker = async () => {
+      while (next < jobs.length) {
+        const job = jobs[next++];
+        const type = job.file.type || "application/octet-stream";
+        try {
+          const { url, key, contentType } = await api("/api/upload-url", {
+            method: "POST",
+            body: { entryId, sector: data.sector, valueChain: data.valueChain, fileName: job.name, contentType: type, size: job.file.size },
+          });
+          await putToS3(url, job.file, contentType, (p) => { const b = bar(job.i); if (b) b.style.width = (p * 100).toFixed(0) + "%"; });
+          bar(job.i)?.classList.add("done");
+          uploaded[job.i] = { key, name: job.name, size: job.file.size, type };
+        } catch (e) {
+          bar(job.i)?.classList.add("err");
+          throw new Error(`"${job.name}": ${e.message}`);
+        }
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(3, jobs.length) }, worker));
+
+    $("submitBtn").textContent = "Saving details…";
+    await api("/api/save-entry", { method: "POST", body: { ...data, files: uploaded } });
+
+    uploading = false;
+    $("formOverlay").classList.remove("open");
+    toast(`Uploaded ${jobs.length} file${jobs.length > 1 ? "s" : ""} to ${data.sector} → ${data.valueChain}`);
+    resetForm();
+    activeTab = sectorGroup(data.sector); activeVC = null;
+    load();
+  } catch (e) {
+    showError("Upload failed: " + e.message + " You can press Upload Document again to retry.");
+  } finally {
+    uploading = false;
+    $("submitBtn").disabled = false;
+    $("submitBtn").textContent = "Upload Document";
+  }
+});
+
+/* ---------- Start ---------- */
+fillSectors();
+fillValueChains();
+load();
+</script>
+</body>
+</html>
